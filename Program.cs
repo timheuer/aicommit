@@ -40,7 +40,7 @@ await AnsiConsole.Status()
         if (result.ExitCode != 0 || stdOut.Length < 1) diffCreated = false;
 
         // if no diff, send message nothing there
-        if (!diffCreated || stdOut.Length < 1)
+        if (!diffCreated)
         {
             AnsiConsole.MarkupLine("[bold red]No staged changes found. Make sure there are changes and run `git add .`[/]");
             return;
