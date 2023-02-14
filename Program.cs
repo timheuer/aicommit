@@ -40,11 +40,12 @@ await AnsiConsole.Status()
         if (result.ExitCode != 0) diffCreated = false;
 
         // if no diff, send message nothing there
-        if (!diffCreated)
+        if (!diffCreated || stdOut.Length < 1)
         {
-            AnsiConsole.MarkupLine("[bold red]No diff identified[/]");
+            AnsiConsole.MarkupLine("[bold red]No staged changes found. Make sure there are changes and run `git add .`[/]");
             return;
         }
+
         // if diff is too big, alert (> 8000)
         if (stdOut.Length > 8000)
         {
