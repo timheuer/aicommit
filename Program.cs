@@ -98,5 +98,7 @@ if (diffCreated)
 
         var stdOut = stdOutBuffer.ToString();
         var stdErr = stdErrBuffer.ToString();
+
+        AnsiConsole.MarkupLine(stdOut);
     }
 }
