@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\source\\repos\\aicommits\\aicommits.csproj": {}
+  },
+  "projects": {
+    "D:\\source\\repos\\aicommits\\aicommits.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\source\\repos\\aicommits\\aicommits.csproj",
+        "projectName": "aicommits",
+        "projectPath": "D:\\source\\repos\\aicommits\\aicommits.csproj",
+        "packagesPath": "D:\\AppCacheFiles\\nuget\\global-packages",
+        "outputPath": "D:\\source\\repos\\aicommits\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\source\\repos\\NuGet.Config",
+          "C:\\Users\\timheuer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "C:\\Users\\timheuer\\Downloads": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Azure.AI.OpenAI": {
+              "target": "Package",
+              "version": "[1.0.0-beta.2, )"
+            },
+            "CliWrap": {
+              "target": "Package",
+              "version": "[3.6.0, )"
+            },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.46.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
