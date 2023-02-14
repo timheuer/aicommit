@@ -476,3 +476,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /.vs/aicommits/v17/.suo
+/obj/Debug/net7.0/aicommits.csproj.AssemblyReference.cache
