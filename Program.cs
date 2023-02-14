@@ -37,7 +37,7 @@ await AnsiConsole.Status()
         var stdOut = stdOutBuffer.ToString();
         var stdErr = stdErrBuffer.ToString();
 
-        if (result.ExitCode != 0) diffCreated = false;
+        if (result.ExitCode != 0 || stdOut.Length < 1) diffCreated = false;
 
         // if no diff, send message nothing there
         if (!diffCreated || stdOut.Length < 1)
@@ -74,6 +74,27 @@ await AnsiConsole.Status()
         AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
 
+if (diffCreated)
+{
+    if (!AnsiConsole.Confirm("Use commit messsage?"))
+    {
+        AnsiConsole.Markup("Ok...cancelling");
+        return;
+    }
+    else
+    {
+        stdOutBuffer.Clear();
+        stdErrBuffer.Clear();
 
-// prompt if use it
-// if yes, run git commit git commit -m {message}
+        var result = await Cli.Wrap("git")
+                .WithArguments($"commit -m \"{commitMessage}\"")
+                .WithWorkingDirectory(Environment.CurrentDirectory)
+                .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
+                .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
+                .WithValidation(CommandResultValidation.None)
+                .ExecuteAsync();
+
+        var stdOut = stdOutBuffer.ToString();
+        var stdErr = stdErrBuffer.ToString();
+    }
+}
