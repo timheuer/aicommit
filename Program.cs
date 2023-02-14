@@ -13,9 +13,9 @@ var diffCreated = true;
 var commitMessage = string.Empty;
 
 // check for open ai key data
-if (String.IsNullOrEmpty(token))
+if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(model))
 {
-    AnsiConsole.Console.MarkupLine("[bold red]No AZURE_OPENAI_KEY variable found[/]");
+    AnsiConsole.Console.MarkupLine("[bold red]ERROR: No AZURE_OPENAI_KEY variable found[/]");
     return;
 }
 
@@ -65,8 +65,10 @@ await AnsiConsole.Status()
             NucleusSamplingFactor = 1
         };
 
+#pragma warning disable CS8604 // Possible null reference argument.
         var oai = new Azure.AI.OpenAI.OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(token));
-        var completions = await oai.GetCompletionsAsync(model, options, new System.Threading.CancellationToken());
+#pragma warning restore CS8604 // Possible null reference argument.
+        var completions = await oai.GetCompletionsAsync(model, options, new CancellationToken());
         commitMessage = completions.Value.Choices[0].Text;
         commitMessage = Regex.Replace(commitMessage, "(\r\n|\n|\r)+", string.Empty);
 
