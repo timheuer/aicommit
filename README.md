@@ -1,5 +1,5 @@
 # AICommit
-This is not my idea, but I just created one to use Azure OpenAI instead of the base OpenAI resources.
+This is not my idea (original [Nutlope/aicommits](https://github.com/Nutlope/aicommits)), but I just created one to use Azure OpenAI instead of the base OpenAI resources and make it a .NET global tool.
 
 ## Requirements
 You will need an [Azure OpenAI](https://azure.microsoft.com/products/cognitive-services/openai-service/) resource.
