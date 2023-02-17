@@ -1,4 +1,5 @@
-﻿using CliWrap;
+﻿using aicommits;
+using CliWrap;
 using Spectre.Console;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,7 +21,7 @@ if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNu
 }
 
 await AnsiConsole.Status()
-    .Start("Analyzing diff...", async ctx =>
+    .StartAsync("Analyzing diff and generating commit message...", async ctx =>
     {
         ctx.Spinner(Spinner.Known.Dots2);
         ctx.SpinnerStyle(Style.Parse("green"));
@@ -43,13 +44,26 @@ await AnsiConsole.Status()
         if (!diffCreated)
         {
             AnsiConsole.MarkupLine("[bold red]No staged changes found. Make sure there are changes and run `git add .`[/]");
+            diffCreated = false;
             return;
         }
+
+        var finalPrompt = string.Format(prompt, stdOut);
 
         // if diff is too big, alert (> 8000)
         if (stdOut.Length > 8000)
         {
             AnsiConsole.MarkupLine("[bold red]Diff is too large to handle for the robots at this time[/]");
+            diffCreated = false;
+            return;
+        }
+
+        int estimatedTokenSize = finalPrompt.EstimateTokenSize() + 2048 + 500;
+
+        if (estimatedTokenSize > 4090)
+        {
+            AnsiConsole.MarkupLine($"[bold red]This exceeds token sizes right now at approximately {estimatedTokenSize} tokens with prompt and result[/]");
+            diffCreated = false;
             return;
         }
 
@@ -68,10 +82,18 @@ await AnsiConsole.Status()
 #pragma warning disable CS8604 // Possible null reference argument.
         var oai = new Azure.AI.OpenAI.OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(token));
 #pragma warning restore CS8604 // Possible null reference argument.
-        var completions = await oai.GetCompletionsAsync(model, options, new CancellationToken());
-        commitMessage = completions.Value.Choices[0].Text;
-        commitMessage = Regex.Replace(commitMessage, "(\r\n|\n|\r)+", string.Empty);
-
+        try
+        {
+            var completions = await oai.GetCompletionsAsync(model, options, new CancellationToken());
+            commitMessage = completions.Value.Choices[0].Text;
+            commitMessage = Regex.Replace(commitMessage, "(\r\n|\n|\r)+", string.Empty);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteException(ex);
+            diffCreated = false;
+            return;
+        }
         // show commit message
         AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
