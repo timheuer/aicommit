@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 var token = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
 var model = Environment.GetEnvironmentVariable("AZURE_MODEL_DEPLOYMENT");
+const int MAX_TOKENS = 256;
+
 var prompt = "I want you to act like a git commit message writer. I will input a git diff and your job is to convert it into a useful commit message. Do not preface the commit with anything, use the present tense, return a complete sentence, and do not repeat yourself: {0}";
 var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
@@ -58,7 +60,7 @@ await AnsiConsole.Status()
             return;
         }
 
-        int estimatedTokenSize = finalPrompt.EstimateTokenSize() + 2048 + 500;
+        int estimatedTokenSize = finalPrompt.EstimateTokenSize() + MAX_TOKENS;
 
         if (estimatedTokenSize > 4090)
         {
@@ -72,7 +74,7 @@ await AnsiConsole.Status()
         {
             Prompt = { String.Format(prompt, stdOut) },
             Temperature = 0.7f,
-            MaxTokens = 2048,
+            MaxTokens = MAX_TOKENS,
             FrequencyPenalty = 0,
             PresencePenalty = 0,
             Model = "text-davinci-003",

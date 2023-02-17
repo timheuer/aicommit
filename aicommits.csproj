@@ -17,7 +17,7 @@
 	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.1.1-pre</Version>
+	  <Version>0.0.2.1-pre</Version>
 	  <PackageReleaseNotes>Initial pre-release version</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
