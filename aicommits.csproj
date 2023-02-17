@@ -21,7 +21,7 @@
 	  <PackageReleaseNotes>Initial pre-release version</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
-	  <DebugType>embed</DebugType>
+	  <DebugType>embedded</DebugType>
 	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
