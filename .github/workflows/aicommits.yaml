@@ -68,7 +68,7 @@ jobs:
       shell: pwsh
       run: |
         [xml]$nuspec = Get-Content ${{ env.PROJECT_PATH }}
-        $version=$nuspec.project.propertygroup.versionprefix
+        $version=$nuspec.project.propertygroup.version
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         Add-Content -Path $env:GITHUB_OUTPUT -Value "PKG_VERSION=$version"
         Add-Content -Path $env:GITHUB_OUTPUT -Value "RELNOTES=$relnotes"
@@ -105,7 +105,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
-          include-prerelease: true
 
       - name: Get certificate
         id: cert_file
@@ -127,14 +126,14 @@ jobs:
       #- name: Push to GitHub Packages
       # run: dotnet nuget push **/*.nupkg -s "GPR" --skip-duplicate
 
-      #- name: Tag and Release
-      #  id: tag_release
-      #  uses: softprops/action-gh-release@v0.1.15
-      #  with:
-      #    body: ${{ needs.build.outputs.relnotes }}
-      #    tag_name: ${{ needs.build.outputs.version }}
-      #    files: |
-      #      **/*.nupkg
+      - name: Tag and Release
+        id: tag_release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          body: ${{ needs.build.outputs.relnotes }}
+          tag_name: ${{ needs.build.outputs.version }}
+          files: |
+            **/*.nupkg
 
       - name: Publish signed artifact
         uses: actions/upload-artifact@v3
