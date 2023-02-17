@@ -13,11 +13,11 @@
 	  <Authors>TimHeuer</Authors>
 	  <Company>Tim Heuer</Company>
 	  <Description>A quick command to look at staged git activity and offer an AI-generated commit message.</Description>
-	  <PackageProjectUrl>https://github.com/timheuer/aicommits</PackageProjectUrl>
-	  <RepositoryUrl>https://github.com/timheuer/aicommits</RepositoryUrl>
+	  <PackageProjectUrl>https://github.com/timheuer/aicommit</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.1.0-pre</Version>
+	  <Version>0.0.1.1-pre</Version>
 	  <PackageReleaseNotes>Initial pre-release version</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
