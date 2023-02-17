@@ -70,8 +70,8 @@ jobs:
         [xml]$nuspec = Get-Content ${{ env.PROJECT_PATH }}
         $version=$nuspec.project.propertygroup.versionprefix
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
-        echo "PKG_VERSION=$version" >> $GITHUB_OUTPUT
-        echo "RELNOTES=$relnotes" >> $GITHUB_OUTPUT
+        Add-Content -Path $env:GITHUB_OUTPUT -Value "PKG_VERSION=$version"
+        Add-Content -Path $env:GITHUB_OUTPUT -Value "RELNOTES=$relnotes"
 
   deploy:
     needs: build
@@ -127,14 +127,14 @@ jobs:
       #- name: Push to GitHub Packages
       # run: dotnet nuget push **/*.nupkg -s "GPR" --skip-duplicate
 
-      - name: Tag and Release
-        id: tag_release
-        uses: softprops/action-gh-release@v0.1.15
-        with:
-          body: ${{ needs.build.outputs.relnotes }}
-          tag_name: ${{ needs.build.outputs.version }}
-          files: |
-            **/*.nupkg
+      #- name: Tag and Release
+      #  id: tag_release
+      #  uses: softprops/action-gh-release@v0.1.15
+      #  with:
+      #    body: ${{ needs.build.outputs.relnotes }}
+      #    tag_name: ${{ needs.build.outputs.version }}
+      #    files: |
+      #      **/*.nupkg
 
       - name: Publish signed artifact
         uses: actions/upload-artifact@v3
