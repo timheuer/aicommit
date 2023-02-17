@@ -39,6 +39,7 @@ jobs:
       DOTNET_MULTILEVEL_LOOKUP: 0
       DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
       TERM: xterm
+      PROJECT_PATH: "aicommits.csproj"
 
     steps:
     - uses: actions/checkout@v3
@@ -51,10 +52,10 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build {{ env.PROJECT_PATH }} --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack --configuration Release -o finalpackage --no-build
+      run: dotnet pack {{ env.PROJECT_PATH }} --configuration Release -o finalpackage --no-build
 
     - name: Publish artifact
       uses: actions/upload-artifact@v3
@@ -66,7 +67,7 @@ jobs:
       id: set_proj_version
       shell: pwsh
       run: |
-        [xml]$nuspec = Get-Content aicommits.csproj
+        [xml]$nuspec = Get-Content {{ env.PROJECT_PATH }}
         $version=$nuspec.project.propertygroup.versionprefix
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         Write-Output "::set-output name=PKG_VERSION::$version"
