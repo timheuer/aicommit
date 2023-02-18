@@ -10,7 +10,7 @@
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
 	  <Title>AI Commits</Title>
 	  <PackageId>TimHeuer.Git.AICommit</PackageId>
-	  <Authors>TimHeuer</Authors>
+	  <Authors>Tim Heuer</Authors>
 	  <Company>Tim Heuer</Company>
 	  <Description>A quick command to look at staged git activity and offer an AI-generated commit message.</Description>
 	  <PackageProjectUrl>https://github.com/timheuer/aicommit</PackageProjectUrl>
