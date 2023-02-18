@@ -4,21 +4,22 @@ using Spectre.Console;
 using System.Text;
 using System.Text.RegularExpressions;
 
+const int MAX_TOKENS = 256;
+const string prompt = "I want you to act like a git commit message writer. I will input a git diff and your job is to convert it into a useful commit message. Do not preface the commit with anything, use the present tense, return a complete sentence, and do not repeat yourself: {0}";
+
 var token = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
 var model = Environment.GetEnvironmentVariable("AZURE_MODEL_DEPLOYMENT");
-const int MAX_TOKENS = 256;
 
-var prompt = "I want you to act like a git commit message writer. I will input a git diff and your job is to convert it into a useful commit message. Do not preface the commit with anything, use the present tense, return a complete sentence, and do not repeat yourself: {0}";
 var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
-var diffCreated = true;
+var diffCreated = false;
 var commitMessage = string.Empty;
 
 // check for open ai key data
 if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(model))
 {
-    AnsiConsole.Console.MarkupLine("[bold red]ERROR: No AZURE_OPENAI_KEY variable found[/]");
+    AnsiConsole.Console.MarkupLine("[bold red]ERROR: No Azure OpenAI variables found, please add as environment variables[/]");
     return;
 }
 
@@ -40,17 +41,14 @@ await AnsiConsole.Status()
         var stdOut = stdOutBuffer.ToString();
         var stdErr = stdErrBuffer.ToString();
 
-        if (result.ExitCode != 0 || stdOut.Length < 1) diffCreated = false;
+        if (result.ExitCode == 0 && stdOut.Length > 1) diffCreated = true;
 
         // if no diff, send message nothing there
         if (!diffCreated)
         {
             AnsiConsole.MarkupLine("[bold red]No staged changes found. Make sure there are changes and run `git add .`[/]");
-            diffCreated = false;
             return;
         }
-
-        var finalPrompt = string.Format(prompt, stdOut);
 
         // if diff is too big, alert (> 8000)
         if (stdOut.Length > 8000)
@@ -59,6 +57,8 @@ await AnsiConsole.Status()
             diffCreated = false;
             return;
         }
+
+        var finalPrompt = string.Format(prompt, stdOut);
 
         int estimatedTokenSize = finalPrompt.EstimateTokenSize() + MAX_TOKENS;
 
@@ -100,7 +100,7 @@ await AnsiConsole.Status()
         AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
 
-if (diffCreated)
+if (!string.IsNullOrEmpty(commitMessage))
 {
     if (!AnsiConsole.Confirm("Use commit messsage?"))
     {
