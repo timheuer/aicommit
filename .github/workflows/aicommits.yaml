@@ -87,12 +87,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nupkg
-      
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
-        with:
-          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-          nuget-version: latest
 
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3

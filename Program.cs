@@ -1,23 +1,28 @@
 ﻿using aicommits;
 using Azure.AI.OpenAI;
 using CliWrap;
+using Microsoft.Extensions.Configuration;
 using Spectre.Console;
-using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 
 const int MAX_TOKENS = 256;
 const string prompt = "I want you to act like a git commit message writer. I will input a git diff and your job is to convert it into a useful commit message. Do not preface the commit with anything, use the present tense, return a complete sentence, and do not repeat yourself: {0}";
-
-var token = Environment.GetEnvironmentVariable("AZURE_OPENAI_KEY");
-var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
-var model = Environment.GetEnvironmentVariable("AZURE_MODEL_DEPLOYMENT");
 
 var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
 var diffCreated = false;
 var commitMessage = string.Empty;
 Completions? completions = null;
+
+var config = new ConfigurationBuilder()
+    .SetBasePath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData))
+    .AddJsonFile(Path.Combine(".aicommit","appsettings.json"), optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+var token = config["AZURE_OPENAI_KEY"];
+var endpoint = config["AZURE_OPENAI_ENDPOINT"];
+var model = config["AZURE_MODEL_DEPLOYMENT"];
 
 // check for open ai key data
 if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(model))

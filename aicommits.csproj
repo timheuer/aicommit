@@ -17,8 +17,8 @@
 	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.3.2-pre</Version>
-	  <PackageReleaseNotes>Added secondary tokenizer estimator and choose max between estimates</PackageReleaseNotes>
+	  <Version>0.0.4.0-pre</Version>
+	  <PackageReleaseNotes>Changed where Azure OpenAI config can be stored</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
@@ -31,6 +31,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.46.0" />
   </ItemGroup>
 
