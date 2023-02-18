@@ -65,7 +65,7 @@ jobs:
       shell: pwsh
       run: |
         [xml]$nuspec = Get-Content ${{ env.PROJECT_PATH }}
-        $nbgv = ngbv get-version -f json | ConvertFrom-Json
+        $nbgv = nbgv get-version -f json | ConvertFrom-Json
         $version=$nbgv.NuGetPackageVersion
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         Add-Content -Path $env:GITHUB_OUTPUT -Value "PKG_VERSION=$version"
