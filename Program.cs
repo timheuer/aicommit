@@ -1,6 +1,8 @@
 ﻿using aicommits;
+using Azure.AI.OpenAI;
 using CliWrap;
 using Spectre.Console;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -15,6 +17,7 @@ var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
 var diffCreated = false;
 var commitMessage = string.Empty;
+Completions? completions = null;
 
 // check for open ai key data
 if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(model))
@@ -22,6 +25,10 @@ if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(endpoint) || string.IsNu
     AnsiConsole.Console.MarkupLine("[bold red]ERROR: No Azure OpenAI variables found, please add as environment variables[/]");
     return;
 }
+
+// get the number of completions to generate form the args
+int numMessages = 1;
+if (args.Length > 0) numMessages = Convert.ToInt32(args[0]);
 
 await AnsiConsole.Status()
     .StartAsync("Analyzing diff and generating commit message...", async ctx =>
@@ -68,9 +75,9 @@ await AnsiConsole.Status()
             diffCreated = false;
             return;
         }
-
+        
         // generate commit message
-        var options = new Azure.AI.OpenAI.CompletionsOptions()
+        var options = new CompletionsOptions()
         {
             Prompt = { String.Format(prompt, stdOut) },
             Temperature = 0.7f,
@@ -78,7 +85,7 @@ await AnsiConsole.Status()
             FrequencyPenalty = 0,
             PresencePenalty = 0,
             Model = "text-davinci-003",
-            NucleusSamplingFactor = 1
+            NucleusSamplingFactor = 1, SnippetCount = numMessages
         };
 
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -86,9 +93,8 @@ await AnsiConsole.Status()
 #pragma warning restore CS8604 // Possible null reference argument.
         try
         {
-            var completions = await oai.GetCompletionsAsync(model, options, new CancellationToken());
-            commitMessage = completions.Value.Choices[0].Text;
-            commitMessage = Regex.Replace(commitMessage, "(\r\n|\n|\r)+", string.Empty);
+            var response = await oai.GetCompletionsAsync(model, options, new CancellationToken());
+            completions = response.Value;
         }
         catch (Exception ex)
         {
@@ -100,9 +106,24 @@ await AnsiConsole.Status()
         AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
 
-if (!string.IsNullOrEmpty(commitMessage))
+if (completions.Choices.Count > 0)
 {
-    if (!AnsiConsole.Confirm("Use commit messsage?"))
+    string[] choices = new string[completions.Choices.Count + 1];
+    int i = 0;
+    foreach (var choice in completions.Choices)
+    {
+        choices[i] = completions.Choices[i].Text.CleanMessage();
+        i++;
+    }
+    choices[i] = "Cancel";
+
+    var selectedMessage = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Select a commit message or Cancel")
+            .PageSize(10)
+            .AddChoices(choices));
+
+    if (selectedMessage == "Cancel")
     {
         AnsiConsole.Markup("Ok...cancelling");
         return;
@@ -113,7 +134,7 @@ if (!string.IsNullOrEmpty(commitMessage))
         stdErrBuffer.Clear();
 
         var result = await Cli.Wrap("git")
-                .WithArguments($"commit -m \"{commitMessage}\"")
+                .WithArguments($"commit -m \"{selectedMessage}\"")
                 .WithWorkingDirectory(Environment.CurrentDirectory)
                 .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
                 .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))

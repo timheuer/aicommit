@@ -17,8 +17,8 @@
 	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.2.4-pre</Version>
-	  <PackageReleaseNotes>Moving some logic around for error conditions.</PackageReleaseNotes>
+	  <Version>0.0.3.0-pre</Version>
+	  <PackageReleaseNotes>Added support for multiple choices as input arg</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>

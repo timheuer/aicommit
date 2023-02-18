@@ -1,5 +1,7 @@
-﻿namespace aicommits;
-static class TokenHelper
+﻿using System.Text.RegularExpressions;
+
+namespace aicommits;
+static class Helpers
 {
     public static int EstimateTokenSize(this string text)
     {
@@ -16,4 +18,6 @@ static class TokenHelper
         // Return the maximum of word and char estimates
         return Math.Max(tokensCountWordEst, tokensCountCharEst);
     }
+
+    public static string CleanMessage(this string text) => Regex.Replace(text, "(\r\n|\n|\r)+", string.Empty);
 }
