@@ -1,4 +1,4 @@
-name: "Build"
+﻿name: "Build"
 
 on:
   push:
@@ -36,25 +36,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup .NET Core SDK
+    - name: 🧰 Setup .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
     
     # NOTE: this echo hack is due to https://github.com/dotnet/sdk/issues/10310
-    - name: Install NBGV
+    - name: 🧰 Install NBGV
       run: dotnet tool install -g nbgv | echo "already installed"
+
+    - name: ☀️ Set Version
+      run: nbgv cloud
       
-    - name: Restore
+    - name: ♻️ Restore
       run: dotnet restore
 
-    - name: Build
+    - name: 🏗️ Build
       run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
 
-    - name: Pack
+    - name: 💼 Pack
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release -o finalpackage --no-build
 
-    - name: Publish artifact
+    - name: ⬆️ Publish artifact
       uses: actions/upload-artifact@v3
       with:
         name: nupkg
@@ -88,30 +91,30 @@ jobs:
       DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
       TERM: xterm
     steps:
-      - name: Download Package artifact
+      - name: ⬇️ Download Package artifact
         uses: actions/download-artifact@v3
         with:
           name: nupkg
 
-      - name: Setup .NET Core SDK
+      - name: 🧰 Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
 
-      - name: Get certificate
+      - name: 🔐 Get certificate
         id: cert_file
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'certfile.pfx'
           encodedString: ${{ secrets.SIGNING_CERT }}
       
-      - name: Sign NuGet Package
+      - name: ✍️ Sign NuGet Package
         run: dotnet nuget sign **/*.nupkg --certificate-path ${{ steps.cert_file.outputs.filePath }} --certificate-password ${{ secrets.CERT_PWD }} --timestamper http://timestamp.digicert.com
       
-      - name: Push to NuGet
+      - name: 👇 Push to NuGet
         run: dotnet nuget push **/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
-      - name: Tag and Release
+      - name: 🏷️ Tag and Release
         id: tag_release
         uses: softprops/action-gh-release@v0.1.15
         with:
@@ -121,7 +124,7 @@ jobs:
           files: |
             **/*.nupkg
 
-      - name: Publish signed artifact
+      - name: ⬆️ Publish signed artifact
         uses: actions/upload-artifact@v3
         with:
           name: signednupkg
