@@ -19,5 +19,7 @@ static class Helpers
         return Math.Max(tokensCountWordEst, tokensCountCharEst);
     }
 
+    public static int TokenCount(this string text) => AI.Dev.OpenAI.GPT.GPT3Tokenizer.Encode(text).Count;
+
     public static string CleanMessage(this string text) => Regex.Replace(text, "(\r\n|\n|\r)+", string.Empty);
 }

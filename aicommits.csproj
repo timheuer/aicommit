@@ -17,13 +17,14 @@
 	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.3.1-pre</Version>
-	  <PackageReleaseNotes>Added support for multiple choices as input arg</PackageReleaseNotes>
+	  <Version>0.0.3.2-pre</Version>
+	  <PackageReleaseNotes>Added secondary tokenizer estimator and choose max between estimates</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AI.Dev.OpenAI.GPT" Version="1.0.2" />
     <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.3" />
     <PackageReference Include="CliWrap" Version="3.6.0" />
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">

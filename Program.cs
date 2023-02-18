@@ -67,7 +67,7 @@ await AnsiConsole.Status()
 
         var finalPrompt = string.Format(prompt, stdOut);
 
-        int estimatedTokenSize = finalPrompt.EstimateTokenSize() + MAX_TOKENS;
+        int estimatedTokenSize = Math.Max(finalPrompt.EstimateTokenSize(), finalPrompt.TokenCount()) + MAX_TOKENS;
 
         if (estimatedTokenSize > 4090)
         {
