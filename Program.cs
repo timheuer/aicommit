@@ -106,7 +106,7 @@ await AnsiConsole.Status()
         AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
 
-if (completions.Choices.Count > 0)
+if (completions?.Choices.Count > 0)
 {
     string[] choices = new string[completions.Choices.Count + 1];
     int i = 0;
