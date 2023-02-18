@@ -40,7 +40,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-
+        
+    - name: Install NBGV
+      run: dotnet tool install -g nbgv
+      
     - name: Restore
       run: dotnet restore
 
@@ -61,7 +64,8 @@ jobs:
       shell: pwsh
       run: |
         [xml]$nuspec = Get-Content ${{ env.PROJECT_PATH }}
-        $version=$nuspec.project.propertygroup.version
+        $nbgv = ngbv get-version -f json | ConvertFrom-Json
+        $version=$nbgv.NuGetPackageVersion
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         Add-Content -Path $env:GITHUB_OUTPUT -Value "PKG_VERSION=$version"
         Add-Content -Path $env:GITHUB_OUTPUT -Value "RELNOTES=$relnotes"
