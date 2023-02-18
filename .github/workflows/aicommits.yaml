@@ -40,9 +40,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-        
+    
+    # NOTE: this echo hack is due to https://github.com/dotnet/sdk/issues/10310
     - name: Install NBGV
-      run: dotnet tool install -g nbgv
+      run: dotnet tool install -g nbgv | echo "already installed"
       
     - name: Restore
       run: dotnet restore
