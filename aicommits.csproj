@@ -17,7 +17,6 @@
 	  <RepositoryUrl>https://github.com/timheuer/aicommit</RepositoryUrl>
 	  <RepositoryType>git</RepositoryType>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <Version>0.0.4.0-pre</Version>
 	  <PackageReleaseNotes>Changed where Azure OpenAI config can be stored</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageIcon>icon.png</PackageIcon>
