@@ -43,7 +43,6 @@ await AnsiConsole.Status()
         // run diff
         ProcessStartInfo diffProcess = new ProcessStartInfo("git", "diff --cached .")
         {
-            UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             CreateNoWindow = true,
@@ -138,7 +137,6 @@ if (completions?.Choices.Count > 0)
     {
         ProcessStartInfo commitProcess = new ProcessStartInfo("git", $"commit -m \"{selectedMessage}\"")
         {
-            UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             CreateNoWindow = true,
