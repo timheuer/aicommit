@@ -6,7 +6,7 @@ using Spectre.Console;
 using System.Text;
 
 const int MAX_TOKENS = 256;
-const string prompt = "Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {0}";
+const string prompt = "Write an insightful but concise Git commit message in a complete sentence in imperative present tense for the following diff without prefacing it with anything: {0}";
     
 var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
