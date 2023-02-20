@@ -107,8 +107,6 @@ await AnsiConsole.Status()
             diffCreated = false;
             return;
         }
-        // show commit message
-        AnsiConsole.MarkupLine($"[bold white]Commit message: {commitMessage}\n[/]");
     });
 
 if (completions?.Choices.Count > 0)
