@@ -1,15 +1,12 @@
 ﻿using aicommits;
 using Azure.AI.OpenAI;
-using CliWrap;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
-using System.Text;
+using System.Diagnostics;
 
 const int MAX_TOKENS = 256;
 const string prompt = "Write an insightful but concise Git commit message in a complete sentence in imperative present tense for the following diff without prefacing it with anything: {0}";
     
-var stdOutBuffer = new StringBuilder();
-var stdErrBuffer = new StringBuilder();
 var diffCreated = false;
 var commitMessage = string.Empty;
 Completions? completions = null;
@@ -44,18 +41,22 @@ await AnsiConsole.Status()
         ctx.SpinnerStyle(Style.Parse("green"));
 
         // run diff
-        var result = await Cli.Wrap("git")
-            .WithArguments($"diff --cached .")
-            .WithWorkingDirectory(Environment.CurrentDirectory)
-            .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
-            .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
-            .WithValidation(CommandResultValidation.None)
-            .ExecuteAsync();
+        ProcessStartInfo diffProcess = new ProcessStartInfo("git", "diff --cached .")
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+            WorkingDirectory = Environment.CurrentDirectory
+        };
+        var diff = Process.Start(diffProcess);
 
-        var stdOut = stdOutBuffer.ToString();
-        var stdErr = stdErrBuffer.ToString();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        var stdOut = await diff.StandardOutput.ReadToEndAsync();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        var stdErr = await diff.StandardError.ReadToEndAsync();
 
-        if (result.ExitCode == 0 && stdOut.Length > 1) diffCreated = true;
+        if (diff.ExitCode == 0 && stdOut.Length > 1) diffCreated = true;
 
         // if no diff, send message nothing there
         if (!diffCreated)
@@ -135,20 +136,29 @@ if (completions?.Choices.Count > 0)
     }
     else
     {
-        stdOutBuffer.Clear();
-        stdErrBuffer.Clear();
+        ProcessStartInfo commitProcess = new ProcessStartInfo("git", $"commit -m \"{selectedMessage}\"")
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+            WorkingDirectory = Environment.CurrentDirectory
+        };
 
-        var result = await Cli.Wrap("git")
-                .WithArguments($"commit -m \"{selectedMessage}\"")
-                .WithWorkingDirectory(Environment.CurrentDirectory)
-                .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
-                .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
-                .WithValidation(CommandResultValidation.None)
-                .ExecuteAsync();
+        var result = Process.Start(commitProcess);
 
-        var stdOut = stdOutBuffer.ToString();
-        var stdErr = stdErrBuffer.ToString();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        var stdOut = await result.StandardOutput.ReadToEndAsync();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        var stdErr = await result.StandardError.ReadToEndAsync();
 
-        AnsiConsole.Write(stdOut);
+        if (result.ExitCode != 0)
+        {
+            AnsiConsole.MarkupLine($"[bold red]ERROR: {stdErr}[/]");
+        }
+        else
+        {
+            AnsiConsole.Write(stdOut);
+        }
     }
 }
