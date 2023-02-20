@@ -1,7 +1,6 @@
 ﻿using aicommits;
 using Azure.AI.OpenAI;
 using CliWrap;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.Text;
