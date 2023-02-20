@@ -6,8 +6,8 @@ using Spectre.Console;
 using System.Text;
 
 const int MAX_TOKENS = 256;
-const string prompt = "I want you to act like a git commit message writer. I will input a git diff and your job is to convert it into a useful commit message. Do not preface the commit with anything, use the present tense, return a complete sentence, and do not repeat yourself: {0}";
-
+const string prompt = "Write an insightful but concise Git commit message in a complete sentence in present tense for the following diff without prefacing it with anything: {0}";
+    
 var stdOutBuffer = new StringBuilder();
 var stdErrBuffer = new StringBuilder();
 var diffCreated = false;
