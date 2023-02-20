@@ -1,6 +1,7 @@
 ﻿using aicommits;
 using Azure.AI.OpenAI;
 using CliWrap;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.Text;
@@ -13,6 +14,8 @@ var stdErrBuffer = new StringBuilder();
 var diffCreated = false;
 var commitMessage = string.Empty;
 Completions? completions = null;
+
+AnsiConsole.Write(new FigletText("AICommit").LeftJustified().Color(Color.Green));
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData))
@@ -94,7 +97,7 @@ await AnsiConsole.Status()
         };
 
 #pragma warning disable CS8604 // Possible null reference argument.
-        var oai = new Azure.AI.OpenAI.OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(token));
+        var oai = new OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(token));
 #pragma warning restore CS8604 // Possible null reference argument.
         try
         {
