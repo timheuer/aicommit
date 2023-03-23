@@ -91,7 +91,7 @@ await AnsiConsole.Status()
             MaxTokens = MAX_TOKENS,
             FrequencyPenalty = 0,
             PresencePenalty = 0,
-            Model = "text-davinci-003",
+            Model = "gpt-35-turbo",
             NucleusSamplingFactor = 1, SnippetCount = numMessages
         };
 
