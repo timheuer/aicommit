@@ -86,13 +86,12 @@ await AnsiConsole.Status()
         // generate commit message
         var options = new CompletionsOptions()
         {
-            Prompt = { String.Format(prompt, stdOut) },
+            Prompts = { String.Format(prompt, stdOut) },
             Temperature = 0.7f,
             MaxTokens = MAX_TOKENS,
             FrequencyPenalty = 0,
             PresencePenalty = 0,
-            Model = "text-davinci-003",
-            NucleusSamplingFactor = 1, SnippetCount = numMessages
+            NucleusSamplingFactor = 1, ChoicesPerPrompt = numMessages
         };
 
 #pragma warning disable CS8604 // Possible null reference argument.
