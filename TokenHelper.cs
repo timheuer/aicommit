@@ -6,7 +6,7 @@ static class Helpers
     public static int EstimateTokenSize(this string text)
     {
         // Calculate the word count by splitting the text by spaces
-        int wordCount = text.Split(" ").Length;
+        int wordCount = Regex.Matches(text, @"\b\S+\b").Count;
 
         // Calculate the character count by getting the length of the text
         int charCount = text.Length;
