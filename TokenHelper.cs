@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.ML.Tokenizers;
+using System.Text.RegularExpressions;
 
 namespace aicommits;
 static class Helpers
@@ -19,7 +20,11 @@ static class Helpers
         return Math.Max(tokensCountWordEst, tokensCountCharEst);
     }
 
-    public static int TokenCount(this string text) => AI.Dev.OpenAI.GPT.GPT3Tokenizer.Encode(text).Count;
-
+    public static int TokenCount(this string text)
+    {
+        var tokenizer = new Tokenizer(new Bpe());
+        var encodedResult = tokenizer.Encode(text);
+        return encodedResult.Tokens.Count();
+    }
     public static string CleanMessage(this string text) => Regex.Replace(text, "(\r\n|\n|\r)+", string.Empty);
 }
